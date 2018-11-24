@@ -32,9 +32,16 @@ class MapFragment : Fragment(), OnMapReadyCallback{
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_map, container, false)
-        // Inflate the layout for this fragment
+
+        view.map_view.onCreate(savedInstanceState)
+        //view.map_view.onResume()
         view.map_view.getMapAsync(this)
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        view!!.map_view.onResume()
     }
 
 
