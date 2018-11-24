@@ -22,6 +22,22 @@ class ScannerFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         bindScanner()
+        scanner_view.startScanning()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        scanner_view.stopScanning()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        scanner_view.startScanning()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        scanner_view.stopScanning()
     }
 
     private fun bindScanner() {
