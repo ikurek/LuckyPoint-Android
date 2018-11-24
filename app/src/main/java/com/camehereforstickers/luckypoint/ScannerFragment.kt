@@ -35,11 +35,6 @@ class ScannerFragment : Fragment() {
         scanner_view.startScanning()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        scanner_view.stopScanning()
-    }
-
     private fun bindScanner() {
         scanner_view.setOnDecodedCallback { decoded ->
             Toast.makeText(this.context, decoded, Toast.LENGTH_SHORT).show()
