@@ -17,5 +17,14 @@ class TicketFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_ticket, container, false)
     }
 
+    override fun onStart() {
+        super.onStart()
+        bindUI()
+    }
+
+    private fun bindUI() {
+
+    }
+
 
 }
