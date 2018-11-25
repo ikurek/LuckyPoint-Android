@@ -53,6 +53,10 @@ class TicketFragment : Fragment() {
 
                 }).check()
         }
+
+        buy_button.setOnClickListener {
+            goToBuyFragment()
+        }
     }
 
     private fun goToScanFragment() {
@@ -60,7 +64,11 @@ class TicketFragment : Fragment() {
         mainActivity.changeFragment(ScannerFragment(), true, "scan")
     }
 
-    private fun goToBuyFragment() {}
+    private fun goToBuyFragment() {
+
+        val mainActivity = this.activity as MainActivity
+        mainActivity.changeFragment(BuyTicketFragment(), true, "buy")
+    }
 
 
 
