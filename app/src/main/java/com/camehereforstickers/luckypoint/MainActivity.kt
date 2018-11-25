@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
     val mapFragment = MapFragment()
     val ticketFragment = TicketFragment()
     val rankFragment = RankFragment()
-    val profileFragment = Fragment()
+    val profileFragment = ProfileFragment()
 
     var currentFragmentTag = ""
 
@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        changeFragment(ticketFragment, false, "map")
+        changeFragment(ticketFragment, false, "ticket")
     }
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
