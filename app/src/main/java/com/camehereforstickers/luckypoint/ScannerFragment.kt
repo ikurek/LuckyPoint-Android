@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_scanner.*
 
 class ScannerFragment : Fragment() {
@@ -37,7 +36,12 @@ class ScannerFragment : Fragment() {
 
     private fun bindScanner() {
         scanner_view.setOnDecodedCallback { decoded ->
-            Toast.makeText(this.context, decoded, Toast.LENGTH_SHORT).show()
+            val activity = this.activity as MainActivity
+            activity.changeFragment(
+                NewTicketFragment.instantiateWithTicketCode(decoded),
+                true,
+                "newticket"
+            )
         }
     }
 
