@@ -27,7 +27,7 @@ class ProfileFragment : Fragment() {
         val sharedPrefs = context?.getSharedPreferences("luckypoint", Context.MODE_PRIVATE)
 
         name_text.text = sharedPrefs?.getString("name", "")
-        number_text.text = sharedPrefs?.getLong("number", 0L).toString()
+        number_text.text = sharedPrefs?.getString("number", "")
 
         sign_out_button.setOnClickListener {
             signOut()

@@ -19,11 +19,11 @@ class LoginActivity : AppCompatActivity() {
 
             sign_in_button.setOnClickListener {
 
-                val number = number_text.text.toString().toLong()
+                val number = number_text.text.toString()
                 val username = name_text.text.toString()
 
                 getSharedPreferences("luckypoint", Context.MODE_PRIVATE).edit()
-                    .putLong("number", number)
+                    .putString("number", number)
                     .putString("name", username)
                     .apply()
 

@@ -4,8 +4,6 @@ package com.camehereforstickers.luckypoint
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.Resources
-import android.graphics.Bitmap
 import android.location.Criteria
 import android.location.LocationManager
 import android.os.Bundle
@@ -15,20 +13,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import com.camehereforstickers.luckypoint.api.APIBuilder
 import com.camehereforstickers.luckypoint.model.LottoPlace
 import com.camehereforstickers.luckypoint.model.LottoPointClusterItem
 import com.camehereforstickers.luckypoint.model.Place
-import com.google.android.gms.maps.CameraUpdate
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.google.gson.stream.JsonReader
-import com.google.maps.android.clustering.ClusterManager
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -36,14 +29,8 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.fragment_map.view.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.io.BufferedReader
-import java.io.FileReader
 import java.io.InputStreamReader
-import java.io.Reader
-import java.lang.reflect.Type
 
 
 class MapFragment : Fragment(), OnMapReadyCallback{
@@ -60,6 +47,7 @@ class MapFragment : Fragment(), OnMapReadyCallback{
         mMap.setOnMarkerClickListener(lottoClusterManager)
         checkLocationPermisions()
         getLottoPlaces()
+        addCouponMarker()
         //addCouponMarker(getUserLocation(), "3bhjb3iu")
         // Add a marker in Sydney, Australia, and move the camera.
         //val sydney = LatLng(-34.0, 151.0)
@@ -135,10 +123,12 @@ class MapFragment : Fragment(), OnMapReadyCallback{
         }
     }
 
-    fun addCouponMarker(latLng: LatLng, id: String){
+    fun addCouponMarker() {
+        val location = getUserLocation()
+        val offset = LatLng(location.latitude + 0.1231, location.longitude + 0.3412)
         mMap.addMarker(MarkerOptions()
-            .title(id)
-            .position(latLng)
+            .title("Winner!")
+            .position(offset)
             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)))
     }
 
