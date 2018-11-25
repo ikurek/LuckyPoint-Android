@@ -1,5 +1,6 @@
 package com.camehereforstickers.luckypoint.api
 
+import com.camehereforstickers.luckypoint.model.Place
 import com.camehereforstickers.luckypoint.model.RankModel
 import com.camehereforstickers.luckypoint.model.TicketModel
 import com.camehereforstickers.luckypoint.model.UserModel
@@ -28,4 +29,7 @@ interface APIInterface {
 
     @POST("/api/UserController")
     fun postUser(@Body user: UserModel): Call<UserModel>
+
+    @GET("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=51.116162,17.037725&radius=500&type=store&keyword=spo%C5%BCywczy&key=AIzaSyAcJ5FRSuiMC2OWY0Y9mawgvuL4lzwnRJI")
+    fun getLottoPoints(): Call<List<Place>>
 }

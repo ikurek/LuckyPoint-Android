@@ -4,20 +4,31 @@ package com.camehereforstickers.luckypoint
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
+import android.graphics.Bitmap
 import android.location.Criteria
 import android.location.LocationManager
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.camehereforstickers.luckypoint.api.APIBuilder
+import com.camehereforstickers.luckypoint.model.LottoPlace
+import com.camehereforstickers.luckypoint.model.LottoPointClusterItem
+import com.camehereforstickers.luckypoint.model.Place
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.*
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.google.gson.stream.JsonReader
+import com.google.maps.android.clustering.ClusterManager
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -25,16 +36,31 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.fragment_map.view.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.BufferedReader
+import java.io.FileReader
+import java.io.InputStreamReader
+import java.io.Reader
+import java.lang.reflect.Type
 
 
 class MapFragment : Fragment(), OnMapReadyCallback{
 
     private lateinit var mMap : GoogleMap
+    private var lottoPlacesList: List<Place>? = null
+    private lateinit var lottoClusterManager: ClusterManager<LottoPointClusterItem>
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(context!!, R.raw.map_style))
+        lottoClusterManager = ClusterManager(context, mMap)
+        mMap.setOnCameraIdleListener(lottoClusterManager)
+        mMap.setOnMarkerClickListener(lottoClusterManager)
         checkLocationPermisions()
+        getLottoPlaces()
+        //addCouponMarker(getUserLocation(), "3bhjb3iu")
         // Add a marker in Sydney, Australia, and move the camera.
         //val sydney = LatLng(-34.0, 151.0)
         //mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
@@ -109,8 +135,31 @@ class MapFragment : Fragment(), OnMapReadyCallback{
         }
     }
 
+    fun addCouponMarker(latLng: LatLng, id: String){
+        mMap.addMarker(MarkerOptions()
+            .title(id)
+            .position(latLng)
+            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)))
+    }
 
-
-
-
+    fun getLottoPlaces(){
+        var lottoList: List<LottoPlace>? = null
+        if(activity != null){
+            val raw = context!!.assets.open("kolektury.json")
+            val reader = BufferedReader(InputStreamReader(raw, "UTF8"))
+            val lottoListType = object : TypeToken<List<LottoPlace>>(){}.type
+            //val founderListType = TypeToken<List<LottoPlace>>(){}.getType()
+            lottoList = Gson().fromJson<List<LottoPlace>>(reader, lottoListType)
+        }
+        if(lottoList != null){
+            var i = 0
+            lottoList.forEach {
+                i++
+                if(i%7 == 0)
+                    lottoClusterManager.addItem(LottoPointClusterItem(LatLng(it.lat, it.lng)))
+            }
+        }else{
+            Log.e("Lotto List", "null")
+        }
+    }
 }
