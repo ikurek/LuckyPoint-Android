@@ -9,10 +9,13 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.camehereforstickers.luckypoint.api.APIBuilder
+import com.camehereforstickers.luckypoint.model.Place
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -25,11 +28,15 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.android.synthetic.main.fragment_map.view.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class MapFragment : Fragment(), OnMapReadyCallback{
 
     private lateinit var mMap : GoogleMap
+    private var lottoPlacesList: List<Place>? = null
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
@@ -109,8 +116,27 @@ class MapFragment : Fragment(), OnMapReadyCallback{
         }
     }
 
+    fun getLottoPlaces(){
+        APIBuilder.getAPI().getLottoPoints().enqueue(object : Callback<List<Place>>{
+            override fun onResponse(call: Call<List<Place>>, response: Response<List<Place>>) {
+                if (response.code() == 200){
+                    lottoPlacesList = response.body()
+                    lottoPlacesList?.forEach {
+                        mMap.addMarker(MarkerOptions()
+                            .position(it.geometry.location)
+                            .title(it.name))
+                    }
+                } else{
+                    lottoPlacesList = null
+                }
+            }
 
+            override fun onFailure(call: Call<List<Place>>, t: Throwable) {
+                Log.e("Get Lotto Places", t.message)
+            }
 
+        })
+    }
 
 
 }
