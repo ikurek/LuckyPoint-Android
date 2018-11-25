@@ -5,6 +5,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Bitmap
 import android.location.Criteria
 import android.location.LocationManager
 import android.os.Bundle
@@ -59,6 +60,7 @@ class MapFragment : Fragment(), OnMapReadyCallback{
         mMap.setOnMarkerClickListener(lottoClusterManager)
         checkLocationPermisions()
         getLottoPlaces()
+        //addCouponMarker(getUserLocation(), "3bhjb3iu")
         // Add a marker in Sydney, Australia, and move the camera.
         //val sydney = LatLng(-34.0, 151.0)
         //mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
@@ -131,6 +133,13 @@ class MapFragment : Fragment(), OnMapReadyCallback{
         }else{
             LatLng(0.0,0.0)
         }
+    }
+
+    fun addCouponMarker(latLng: LatLng, id: String){
+        mMap.addMarker(MarkerOptions()
+            .title(id)
+            .position(latLng)
+            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)))
     }
 
     fun getLottoPlaces(){
